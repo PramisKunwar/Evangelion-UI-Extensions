@@ -4,8 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Evangelion UI Extension</title>
+    <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-    
+    <div class="popup-container">
+        <div class="popup-header">
+            <div class="popup-title">NERV</div>
+            <div class="popup-subtitle">EVANGELION UI SYSTEM</div>
+        </div>
+
+        <div class="popup-section">
+            <div class="popup-row">
+                <span class="popup-label">HUD STATUS</span>
+                <button id="toggle-btn" class="toggle-btn active">
+                    <span class="toggle-text" id="toggle-text">ONLINE</span>
+                    <span class="toggle-indicator" id="toggle-indicator"></span>
+                </button>
+            </div>
+        </div>
+
+        <div class="popup-section">
+            <div class="popup-section-title">OPERATION MODE</div>
+            <div class="mode-selector">
+                <button class="mode-btn-active" id="mode-analysis" data-mode="analysis">
+                <span class="mode-icon">◈</span>
+                ANALYSIS 
+                </button>
+                <button class="mode-btn" id="mode-combat" data-mode="combat">
+                    <span class="mode-icon">◆</span>
+                    COMBAT
+                </button>
+            </div>
+        </div>
+
+        <div class="popup-footer">
+            <span class="popup-version">EVA-SYS v1.0.0</span>
+        </div>
+    </div>
+    <script src="popup.js"></script>
 </body>
 </html>
