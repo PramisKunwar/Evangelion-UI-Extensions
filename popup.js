@@ -12,8 +12,8 @@ function loadSettings() {
     if (!settings) return;
 
     toggleEnabled.checked = settings.enabled;
-    toggleFlicker.checked = settings.flicker !== false;
-    toggleBoot.checked = settings.bootSequence !== false;
+    toggleFlicker.checked = settings.flicker !== true;
+    toggleBoot.checked = settings.bootSequence !== true;
 
     themeButtons.forEach(btn => {
       btn.classList.toggle('active', btn.dataset.theme === settings.theme);
@@ -73,5 +73,3 @@ themeButtons.forEach(btn => {
     themeButtons.forEach(b => b.classList.toggle('active', b === btn));
   });
 });
-
-loadSettings();
