@@ -1,6 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
 
-
+:root {
+  --eva-red: #FF3B3B;
+  --eva-orange: #FF8C00;
+  --eva-green: #00FF66;
+  --eva-cyan: #00E5FF;
+  --eva-black: #0A0A0A;
+  --eva-panel-bg: rgba(0, 0, 0, 0.82);
+  --eva-border: rgba(255, 59, 59, 0.4);
+  --eva-font-display: 'Orbitron', monospace;
+  --eva-font-body: 'Rajdhani', 'Courier New', monospace;
+  --eva-glow-red: 0 0 8px rgba(255, 59, 59, 0.5), 0 0 20px rgba(255, 59, 59, 0.15);
+  --eva-glow-green: 0 0 8px rgba(0, 255, 102, 0.5), 0 0 20px rgba(0, 255, 102, 0.15);
+  --eva-glow-orange: 0 0 8px rgba(255, 140, 0, 0.5), 0 0 20px rgba(255, 140, 0, 0.15);
+}
 
 #eva-hud-overlay {
   position: fixed;
