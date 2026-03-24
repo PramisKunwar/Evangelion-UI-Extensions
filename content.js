@@ -1,18 +1,30 @@
+/* ═══════════════════════════════════════════════════════
+   EVANGELION UI EXTENSION — Content Script
+   Injected into every page. Manages HUD overlay lifecycle.
+   ═══════════════════════════════════════════════════════ */
+
 (() => {
   'use strict';
 
+  // Prevent double-injection
   if (document.getElementById('eva-hud-overlay')) return;
 
+  /* ── State ── */
   let enabled = true;
-  let mode = 'analysis';
+  let mode = 'analysis'; // 'analysis' | 'combat'
   let intervals = [];
   let targetRAF = null;
 
+  /* ── Utility ── */
   const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
   const randf = (min, max) => +(Math.random() * (max - min) + min).toFixed(1);
 
+  /* ═══════════════════════════
+     BUILD HUD DOM
+     ═══════════════════════════ */
 
   function buildHUD() {
+    // Main overlay
     const overlay = document.createElement('div');
     overlay.id = 'eva-hud-overlay';
 
@@ -77,6 +89,7 @@
 
     document.documentElement.appendChild(overlay);
 
+    // Target box (separate from overlay so z-index works independently)
     const targetBox = document.createElement('div');
     targetBox.id = 'eva-target-box';
     targetBox.innerHTML = `
@@ -89,12 +102,17 @@
     `;
     document.documentElement.appendChild(targetBox);
 
+    // Scan line
     const scanLine = document.createElement('div');
     scanLine.id = 'eva-scan-line';
     document.documentElement.appendChild(scanLine);
 
     return overlay;
   }
+
+  /* ═══════════════════════════
+     BOOT SEQUENCE
+     ═══════════════════════════ */
 
   function playBootSequence(callback) {
     const boot = document.createElement('div');
@@ -116,11 +134,13 @@
 
     document.documentElement.appendChild(boot);
 
+    // Stagger reveal
     const bootLines = boot.querySelectorAll('.eva-boot-line');
     bootLines.forEach((line, i) => {
       setTimeout(() => line.classList.add('eva-show'), 300 + i * 350);
     });
 
+    // Fade out boot, then start HUD
     setTimeout(() => {
       boot.classList.add('eva-fade-out');
       setTimeout(() => {
@@ -129,6 +149,10 @@
       }, 500);
     }, 300 + lines.length * 350 + 400);
   }
+
+  /* ═══════════════════════════
+     TARGETING SYSTEM
+     ═══════════════════════════ */
 
   let currentTarget = null;
 
@@ -145,6 +169,7 @@
 
   function onMouseOver(e) {
     const el = e.target;
+    // Skip our own elements
     if (el.closest('#eva-hud-overlay, #eva-target-box, #eva-scan-line, #eva-boot-overlay')) return;
     if (el === document.documentElement || el === document.body) return;
     currentTarget = el;
@@ -188,7 +213,12 @@
     if (box) box.classList.remove('eva-locked');
   }
 
+  /* ═══════════════════════════
+     DYNAMIC DATA ENGINE
+     ═══════════════════════════ */
+
   function startDataEngine() {
+    // Update status panel every 2.5s
     intervals.push(setInterval(() => {
       const syncEl = document.getElementById('eva-sync-rate');
       const signalEl = document.getElementById('eva-signal');
@@ -210,6 +240,7 @@
       }
     }, 2500));
 
+    // Update metrics every 2s
     intervals.push(setInterval(() => {
       const cpu = rand(25, 85);
       const data = randf(0.4, 4.8);
@@ -240,6 +271,10 @@
     }, 2000));
   }
 
+  /* ═══════════════════════════
+     WARNING SYSTEM
+     ═══════════════════════════ */
+
   const ALERTS_ANALYSIS = ['DATA STREAM ACTIVE', 'PATTERN DETECTED', 'SCAN COMPLETE'];
   const ALERTS_COMBAT = ['WARNING', 'SIGNAL INTERRUPT', 'THREAT DETECTED', 'EVASION PROTOCOL', 'A.T. FIELD DETECTED'];
 
@@ -257,9 +292,11 @@
       alert.textContent = text;
       container.appendChild(alert);
 
+      // Remove after animation completes
       setTimeout(() => alert.remove(), 3000);
     };
 
+    // Fire alerts at random intervals
     const scheduleNext = () => {
       const delay = mode === 'combat' ? rand(3000, 6000) : rand(6000, 12000);
       const id = setTimeout(() => {
@@ -270,6 +307,10 @@
     };
     scheduleNext();
   }
+
+  /* ═══════════════════════════
+     MODE SWITCHING
+     ═══════════════════════════ */
 
   function applyMode(newMode) {
     mode = newMode;
@@ -283,14 +324,20 @@
       modeLabel.textContent = mode === 'combat' ? 'COMBAT' : 'ANALYSIS';
       modeLabel.style.color = mode === 'combat' ? 'var(--eva-red)' : 'var(--eva-orange)';
     }
-xt
+
+    // Also update target box and scan line class context
     document.documentElement.classList.toggle('eva-combat', mode === 'combat');
   }
+
+  /* ═══════════════════════════
+     SHOW / HIDE HUD
+     ═══════════════════════════ */
 
   function showHUD() {
     const overlay = document.getElementById('eva-hud-overlay');
     if (!overlay) buildHUD();
 
+    // Reveal panels with stagger
     setTimeout(() => {
       document.getElementById('eva-status-panel')?.classList.add('eva-visible');
       document.getElementById('eva-metrics-panel')?.classList.add('eva-visible');
@@ -316,6 +363,10 @@ xt
     document.documentElement.classList.remove('eva-combat');
   }
 
+  /* ═══════════════════════════
+     INITIALIZATION
+     ═══════════════════════════ */
+
   function init() {
     chrome.storage.sync.get({ enabled: true, mode: 'analysis' }, (settings) => {
       enabled = settings.enabled;
@@ -327,6 +378,7 @@ xt
     });
   }
 
+  // Listen for settings changes from popup
   chrome.storage.onChanged.addListener((changes) => {
     if (changes.enabled) {
       enabled = changes.enabled.newValue;
@@ -342,6 +394,7 @@ xt
     }
   });
 
+  // Start
   init();
 
 })();

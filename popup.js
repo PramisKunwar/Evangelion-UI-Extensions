@@ -1,77 +1,37 @@
-const toggleEnabled = document.getElementById('toggleEnabled');
-const toggleFlicker = document.getElementById('toggleFlicker');
-const toggleBoot = document.getElementById('toggleBoot');
-const toggleSite = document.getElementById('toggleSite');
-const siteLabel = document.getElementById('siteLabel');
-const themeButtons = document.querySelectorAll('.theme-btn');
+document.addEventListener('DOMContentLoaded', () => {
+  const toggleBtn = document.getElementById('toggle-btn');
+  const toggleText = document.getElementById('toggle-text');
+  const modeAnalysis = document.getElementById('mode-analysis');
+  const modeCombat = document.getElementById('mode-combat');
 
-let currentDomain = '';
+  chrome.storage.sync.get({ enabled: true, mode: 'analysis' }, (settings) => {
+    updateToggleUI(settings.enabled);
+    updateModeUI(settings.mode);
+  });
 
-function loadSettings() {
-  chrome.runtime.sendMessage({ type: 'GET_SETTINGS' }, (settings) => {
-    if (!settings) return;
-
-    toggleEnabled.checked = settings.enabled;
-    toggleFlicker.checked = settings.flicker !== false;
-    toggleBoot.checked = settings.bootSequence !== false;
-
-    themeButtons.forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.theme === settings.theme);
-    });
-
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (tabs[0] && tabs[0].url) {
-        try {
-          const url = new URL(tabs[0].url);
-          currentDomain = url.hostname.replace(/^www\./, '');
-          siteLabel.textContent = currentDomain;
-          
-          const siteEnabled = settings.perSite?.[currentDomain] !== false;
-          toggleSite.checked = siteEnabled;
-        } catch (e) {
-          siteLabel.textContent = 'This site';
-          toggleSite.checked = true;
-        }
-      }
+  toggleBtn.addEventListener('click', () => {
+    chrome.storage.sync.get({ enabled: true }, (settings) => {
+      const newVal = !settings.enabled;
+      chrome.storage.sync.set({ enabled: newVal });
+      updateToggleUI(newVal);
     });
   });
-}
 
-function updateSettings(partial) {
-  chrome.runtime.sendMessage({
-    type: 'UPDATE_SETTINGS',
-    settings: partial
-  });
-}
+  modeAnalysis.addEventListener('click', () => setMode('analysis'));
+  modeCombat.addEventListener('click', () => setMode('combat'));
 
-toggleEnabled.addEventListener('change', () => {
-  updateSettings({ enabled: toggleEnabled.checked });
-});
+  function setMode(m) {
+    chrome.storage.sync.set({ mode: m });
+    updateModeUI(m);
+  }
 
-toggleFlicker.addEventListener('change', () => {
-  updateSettings({ flicker: toggleFlicker.checked });
-});
+  function updateToggleUI(on) {
+    toggleBtn.classList.toggle('active', on);
+    toggleText.textContent = on ? 'ONLINE' : 'OFFLINE';
+  }
 
-toggleBoot.addEventListener('change', () => {
-  updateSettings({ bootSequence: toggleBoot.checked });
-});
-
-toggleSite.addEventListener('change', () => {
-  if (currentDomain) {
-    chrome.runtime.sendMessage({
-      type: 'TOGGLE_SITE',
-      domain: currentDomain,
-      enabled: toggleSite.checked
-    });
+  function updateModeUI(m) {
+    modeAnalysis.classList.toggle('active', m === 'analysis');
+    modeCombat.classList.toggle('active', m === 'combat');
   }
 });
-
-themeButtons.forEach(btn => {
-  btn.addEventListener('click', () => {
-    const theme = btn.dataset.theme;
-    updateSettings({ theme });
-    themeButtons.forEach(b => b.classList.toggle('active', b === btn));
-  });
-});
-
-loadSettings();
