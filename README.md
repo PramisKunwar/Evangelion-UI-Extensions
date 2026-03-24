@@ -31,12 +31,12 @@ Adds a cinematic HUD over websites. The page stays interactive — overlay is pu
 
 ```
 eva-extension/
-├── manifest.json      # Manifest V3 configuration
-├── content.js         # HUD injection, targeting, data engine
-├── styles.css         # All overlay styles and animations
-├── popup.html         # Extension popup markup
-├── popup.js           # Popup logic (toggle, mode switch)
-├── popup.css          # Popup styling
+├── manifest.json     
+├── content.js         
+├── styles.css         
+├── popup.html         
+├── popup.js           
+├── popup.css       
 └── icons/
     ├── icon16.png
     ├── icon48.png
