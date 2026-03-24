@@ -42,11 +42,6 @@ eva-extension/
     ├── icon48.png
     └── icon128.png
 ```
----
-## Usage
-- Toggle HUD via popup  
-- Switch between ANALYSIS and COMBAT  
-- Settings saved with `chrome.storage.sync`
 
 ---
 
