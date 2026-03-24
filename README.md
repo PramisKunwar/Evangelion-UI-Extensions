@@ -1,61 +1,54 @@
-/*
+# Evangelion UI Extension
+Chrome Extension (Manifest V3) that overlays any webpage with a sci-fi HUD inspired by *Neon Genesis Evangelion*.
+
+---
+
+## Overview
+Adds a cinematic HUD over websites. The page stays interactive — overlay is purely visual.
+
+---
+
+| ![Evangelion UI Extension](/Evangelion%20UI%20Extension.png) | ![Evangelion UI Extension](/Evangelion%20UI%20Extension1.png) |
+|-------------------------------------------------------------|---------------------------------------------------------------|
+| ![Evangelion UI Extension](/Evangelion%20UI%20Extension2.png) | ![Evangelion UI Extension](/Evangelion%20UI%20Extension3.png) |
+| ![Evangelion UI Extension](/Evangelion%20UI%20Extension4.png) | ![Evangelion UI Extension](/Evangelion%20UI%20Extension5.png) |
 
 
+## Features
+- **Targeting**: Hover to lock on elements with animated brackets + info  
+- **Status Panel**: Sync rate, signal strength, system activity  
+- **Alerts**: Periodic warnings with flashing borders  
+- **Metrics**: Animated CPU, data flow, latency  
+- **Modes**:  
+  - *Analysis*: Calm visuals, orange accents  
+  - *Combat*: Red palette, faster updates, frequent alerts  
+- **Boot Sequence**: Quick startup animation  
+- **Scanline**: Subtle sweeping line
 
-Text Transformation Engine
-HUD overlay
-Targeting Reticle
-Mini Radar
-Feed Labeling
-Alert System
-Dynamic Metrics
-Scanline + Glitch FX 
+---
 
+## File Structure
 
-Subscribe ---> TRACK TARGET
-Like ----> CONFIRM SIGNAL
-Views ---> OBSERVATIONS
-Comments ---> FIELD REPORTS
-Recommended ---> RELATED ACTIVITY
-History ----> ACTIVITY LOG
-Explore ---> SCAN PERIMETER
-Shorts ---> MICRO FEEDS
- 
-The core 
+```
+eva-extension/
+├── manifest.json      # Manifest V3 configuration
+├── content.js         # HUD injection, targeting, data engine
+├── styles.css         # All overlay styles and animations
+├── popup.html         # Extension popup markup
+├── popup.js           # Popup logic (toggle, mode switch)
+├── popup.css          # Popup styling
+└── icons/
+    ├── icon16.png
+    ├── icon48.png
+    └── icon128.png
+```
+---
+## Usage
+- Toggle HUD via popup  
+- Switch between ANALYSIS and COMBAT  
+- Settings saved with `chrome.storage.sync`
 
-Binomial theorem:
+---
 
-
-
-*/
-
-
-
-/*
-
-    write fruits name:
-    1. mango
-    2. apple
-    3. kiwi
-    4. bananana
-    5. orange
-    6. 
-
-
-*/
-
-
-
-/*
-    Derivative:
-
-    Hyperbolic function: The functions which are the combination of exponential functions, i.e. ex and e-x.
-
-    Derivatives: 
-    sinh-1x ==> 1/root 1-x2
-    cosh-1x ===> 
-    tanh-1x ==>
-    coth-1x ==>
-    sech-1x ==>
-    cosech-1x ==>
-*/
+## License
+Made for hack club (carnival ysws).
